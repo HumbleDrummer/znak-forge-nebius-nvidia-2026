@@ -47,9 +47,12 @@ jobs:
       - name: Extract committed bytes to a short isolated path
         run: |
           from pathlib import Path
-          import os, subprocess, zipfile
-          archive = Path(os.environ['RUNNER_TEMP']) / 'zf-source.zip'
-          root = Path(os.environ['RUNNER_TEMP']) / 'zf'
+          import os, subprocess, sys, zipfile
+          archive = Path.home() / 'zf-source.zip'
+          root = Path.home() / 'zf'
+          # The relative-runtime rejection test needs cwd and Python on one drive.
+          if os.name == 'nt':
+              assert root.drive.lower() == Path(sys.executable).drive.lower(), 'CI_DRIVE_MISMATCH'
           root.mkdir()
           subprocess.run(['git', 'archive', '--format=zip', '-o', str(archive), 'HEAD'], check=True)
           with zipfile.ZipFile(archive) as source:
@@ -60,7 +63,7 @@ jobs:
         run: |
           from pathlib import Path
           import os, subprocess, sys
-          root = Path(os.environ['RUNNER_TEMP']) / 'zf'
+          root = Path.home() / 'zf'
           subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', 'tests', '-v'],
                          cwd=root / 'ZNAK_FORGE_CODE_v0_1', check=True)
           subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', 'hackathon', '-p', 'test_*.py', '-v'],
@@ -69,7 +72,7 @@ jobs:
         run: |
           from pathlib import Path
           import json, os, subprocess, sys, zipfile
-          parent = Path(os.environ['RUNNER_TEMP'])
+          parent = Path.home()
           for eol in ('LF', 'CRLF'):
               root = parent / ('zf-demo-' + eol)
               root.mkdir()
