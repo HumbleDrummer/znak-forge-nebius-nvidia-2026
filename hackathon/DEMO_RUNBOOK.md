@@ -6,6 +6,33 @@ Demonstrate that NVIDIA Nemotron on Nebius Token Factory can propose a repair,
 while ZNAK FORGE independently controls repository authority, mutation,
 verification, rollback and acceptance.
 
+## Offline LF/CRLF preflight (no API key and no model call)
+
+On Windows, extract the repository into a short directory such as
+`%TEMP%/zf-demo`. This repair does not change Windows long-path settings.
+From the repository root run:
+
+    python hackathon/run_local_demo.py
+    python -m unittest discover -s hackathon -p "test_*.py" -v
+
+The runner's exit code 0 requires BOTH an accepted positive repair and an
+executed negative shadow counterexample with verified rollback. A failure
+before verification, such as `target identity changed`, is NOT a passing
+negative demonstration. The negative subprocess's expected exit code is 2.
+
+Each fresh copied fixture receives an external `bound_task.json` beside
+`demo_repo`, before solving. Binding permits only uniform LF or CRLF forms
+of the fixture already pinned in the template. It rejects other content,
+missing pins and inconsistent evidence. The source fixture and template
+remain unchanged. The bound evidence and `expected_sha256` both identify
+the EXACT copied bytes; the engine's check is not normalized or bypassed.
+A later byte change (including changing line endings) must still fail.
+
+The runner preserves the bound task, template/bound-task digests, actual
+verification results, attempted diff and rollback verdict. These are local
+test results, not evidence of a new Nebius inference call. Live provider
+responses are NOT rewritten by this deterministic-fixture binding helper.
+
 ## A. Live Nebius dry-run — first external proof
 
 Precondition:
@@ -15,7 +42,7 @@ Precondition:
 
 Run:
 
-    powershell -ExecutionPolicy Bypass -File .\hackathon\run_live_demo.ps1
+    python .\hackathon\run_live_demo.py
 
 Expected evidence:
 1. Nebius/Nemotron returns one valid BrainResponse JSON.
