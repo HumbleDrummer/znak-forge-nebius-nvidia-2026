@@ -1,0 +1,100 @@
+name: Offline demo
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: offline-demo-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline:
+    name: offline (${{ matrix.os }}, autocrlf=${{ matrix.autocrlf }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2022]
+        autocrlf: ['false', 'true']
+    env:
+      PYTHONIOENCODING: utf-8
+      PYTHONUTF8: '1'
+      GIT_CONFIG_COUNT: '1'
+      GIT_CONFIG_KEY_0: core.autocrlf
+      GIT_CONFIG_VALUE_0: ${{ matrix.autocrlf }}
+      NEBIUS_API_KEY: ''
+      OPENAI_API_KEY: ''
+    defaults:
+      run:
+        shell: python
+    steps:
+      - name: Check out exact candidate without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: '3.11'
+      - name: Extract committed bytes to a short isolated path
+        run: |
+          from pathlib import Path
+          import os, subprocess, sys, zipfile
+          archive = Path.home() / 'zf-source.zip'
+          root = Path.home() / 'zf'
+          # The relative-runtime rejection test needs cwd and Python on one drive.
+          if os.name == 'nt':
+              assert root.drive.lower() == Path(sys.executable).drive.lower(), 'CI_DRIVE_MISMATCH'
+          root.mkdir()
+          subprocess.run(['git', 'archive', '--format=zip', '-o', str(archive), 'HEAD'], check=True)
+          with zipfile.ZipFile(archive) as source:
+              source.extractall(root)
+          head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          print('Exact tested commit:', head)
+      - name: Engine and hackathon regressions (offline)
+        run: |
+          from pathlib import Path
+          import os, subprocess, sys
+          root = Path.home() / 'zf'
+          subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', 'tests', '-v'],
+                         cwd=root / 'ZNAK_FORGE_CODE_v0_1', check=True)
+          subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', 'hackathon', '-p', 'test_*.py', '-v'],
+                         cwd=root, check=True)
+      - name: Full LF and CRLF demos with verified negative evidence
+        run: |
+          from pathlib import Path
+          import json, os, subprocess, sys, zipfile
+          parent = Path.home()
+          for eol in ('LF', 'CRLF'):
+              root = parent / ('zf-demo-' + eol)
+              root.mkdir()
+              with zipfile.ZipFile(parent / 'zf-source.zip') as source:
+                  source.extractall(root)
+              fixture = root / 'ZNAK_FORGE_CODE_v0_1' / 'fixtures' / 'demo_repo' / 'inventory.py'
+              lf = fixture.read_bytes().replace(b'\r\n', b'\n')
+              fixture.write_bytes(lf if eol == 'LF' else lf.replace(b'\n', b'\r\n'))
+              result = subprocess.run([sys.executable, 'hackathon/run_local_demo.py'],
+                                      cwd=root, text=True, capture_output=True)
+              print(eol, 'exit:', result.returncode)
+              print(result.stdout)
+              print(result.stderr, file=sys.stderr)
+              result.check_returncode()
+              summary = json.loads(result.stdout)
+              positive, negative = summary['positive'], summary['negative_shadow_fail']
+              assert positive['final_status'] == 'ACCEPTED'
+              assert positive['mutation_status'] == 'APPLIED_VERIFIED'
+              assert negative['final_status'] == 'ROLLBACK'
+              assert negative['mutation_status'] == 'ROLLED_BACK'
+              assert negative['rollback_verified'] and negative['source_unchanged']
+              assert negative['shadow_counterexample_observed']
+              assert negative['source_sha256_before'] == negative['source_sha256_after']
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as report:
+              report.write('Offline suites and full LF/CRLF demos passed; negative shadow failure and exact rollback verified. No live model calls.\n')
