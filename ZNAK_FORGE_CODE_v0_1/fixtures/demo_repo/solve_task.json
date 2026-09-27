@@ -1,0 +1,164 @@
+{
+  "task_contract": {
+    "goal": "Reject duplicate inventory SKUs after canonical normalization.",
+    "explicit_requirements": [
+      "Duplicate canonical SKUs raise ValueError."
+    ],
+    "implicit_requirement_candidates": [],
+    "exclusions": [
+      "Do not special-case only an identical raw spelling."
+    ],
+    "acceptance_conditions": [
+      "Whitespace/case-equivalent duplicate SKUs are also rejected."
+    ],
+    "unknowns": [],
+    "evidence_refs": [
+      "E1",
+      "E2"
+    ]
+  },
+  "brain_response": {
+    "evidence": [
+      {
+        "evidence_id": "E1",
+        "source": "inventory.py",
+        "locator": "total_by_sku loop",
+        "kind": "SOURCE",
+        "claim": "The normalized dictionary assignment overwrites an existing canonical SKU.",
+        "supports": [
+          "R1"
+        ],
+        "contradicts": [],
+        "sha256": "6f1c52f94cf76aa98e40fe78b3297f9d70de8c75e5d941e3455b96fd588e59de",
+        "observed_at": "",
+        "claim_type": "EVIDENCE"
+      },
+      {
+        "evidence_id": "E2",
+        "source": "test_inventory.py",
+        "locator": "InventoryTests",
+        "kind": "TEST",
+        "claim": "The shadow case differs in raw spelling but has the same canonical SKU.",
+        "supports": [
+          "A1"
+        ],
+        "contradicts": [],
+        "sha256": "",
+        "observed_at": "",
+        "claim_type": "EVIDENCE"
+      }
+    ],
+    "localization": {
+      "target_file": "inventory.py",
+      "target_symbol_or_region": "total_by_sku normalization loop",
+      "failure_or_requirement": "Canonical duplicate SKUs must not overwrite earlier quantities.",
+      "evidence_refs": [
+        "E1",
+        "E2"
+      ],
+      "dependency_neighbors": [
+        "test_inventory.InventoryTests"
+      ],
+      "why_this_location": "This loop creates the canonical key and performs the overwriting write.",
+      "why_not_obvious_alternatives": "Callers do not own canonicalization, and raw-input checks miss equivalent spellings."
+    },
+    "hypotheses": [
+      {
+        "hypothesis_id": "H1",
+        "statement": "Duplicate loss occurs because canonical-key membership is never checked before assignment.",
+        "evidence_for": [
+          "E1",
+          "E2"
+        ],
+        "evidence_against": [],
+        "falsifier": "If membership is already checked on the canonical key before assignment, this hypothesis is false.",
+        "expected_observation_if_true": "A pre-assignment canonical-key check makes exact and equivalent duplicates raise ValueError.",
+        "status": "OPEN"
+      }
+    ],
+    "patch_plan": {
+      "items": [
+        {
+          "patch_item_id": "P1",
+          "target": "inventory.py",
+          "requirement_refs": [
+            "R1",
+            "A1"
+          ],
+          "evidence_refs": [
+            "E1",
+            "E2"
+          ],
+          "hypothesis_ref": "H1",
+          "expected_effect": "Reject a repeated canonical key before it can overwrite state.",
+          "risk": "Unexpectedly rejects inputs that callers previously allowed to overwrite.",
+          "verification_refs": [
+            "V1",
+            "V2",
+            "V3"
+          ]
+        }
+      ],
+      "changes": [
+        {
+          "target": "inventory.py",
+          "content": "\"\"\"Deliberately buggy demo: normalized duplicate SKUs silently overwrite.\"\"\"\n\n\ndef total_by_sku(items):\n    normalized = {}\n    for sku, quantity in items:\n        canonical_sku = sku.strip().upper()\n        if canonical_sku in normalized:\n            raise ValueError(\"duplicate canonical SKU: {}\".format(canonical_sku))\n        normalized[canonical_sku] = quantity\n    return sum(normalized.values())\n",
+          "expected_sha256": "6f1c52f94cf76aa98e40fe78b3297f9d70de8c75e5d941e3455b96fd588e59de",
+          "changed_functions": [
+            "total_by_sku"
+          ]
+        }
+      ],
+      "verifications": [
+        {
+          "verification_id": "V1",
+          "kind": "TARGETED_TEST",
+          "argv": [
+            "python",
+            "-m",
+            "unittest",
+            "test_inventory.InventoryTests.test_exact_duplicate_is_rejected"
+          ],
+          "requirement_refs": [
+            "R1"
+          ],
+          "timeout_seconds": 30
+        },
+        {
+          "verification_id": "V2",
+          "kind": "SHADOW_TEST",
+          "argv": [
+            "python",
+            "-m",
+            "unittest",
+            "test_inventory.InventoryTests.test_shadow_normalized_duplicate_is_rejected"
+          ],
+          "requirement_refs": [
+            "A1"
+          ],
+          "timeout_seconds": 30
+        },
+        {
+          "verification_id": "V3",
+          "kind": "REGRESSION_TESTS",
+          "argv": [
+            "python",
+            "-m",
+            "unittest"
+          ],
+          "requirement_refs": [],
+          "timeout_seconds": 30
+        }
+      ],
+      "budget": {
+        "max_files": 3,
+        "max_new_files": 1,
+        "max_changed_functions": 5,
+        "max_changed_loc": 120
+      },
+      "abstraction_tax": [],
+      "syntax_commands": []
+    },
+    "unknowns": []
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "goal": "Reject duplicate inventory SKUs after canonical normalization.",
+  "explicit_requirements": [
+    "Duplicate canonical SKUs raise ValueError."
+  ],
+  "acceptance_conditions": [
+    "Exact and normalization-equivalent duplicates are rejected."
+  ],
+  "exclusions": [
+    "Do not suppress the symptom by special-casing one raw spelling."
+  ],
+  "implicit_requirement_candidates": [],
+  "unknowns": [],
+  "evidence_refs": ["E1", "E2"]
+}
+

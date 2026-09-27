@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "product": "ZNAK_FORGE_CODE_v0_1",
+  "codename": "ROBAK CODE CORE",
+  "run_identity": {
+    "workspace_task_id": "87c0457e-98da-42ef-a687-5f5afc98a4c8",
+    "demo_engine_run_id": "20260923T111048Z-e25dd1600b"
+  },
+  "build_timestamp": "2026-09-23T11:21:05Z",
+  "state": "COMPLETE",
+  "files": [
+    ".gitignore",
+    "DESIGN.md",
+    "README.md",
+    "evidence/BUILD_RECEIPT.json",
+    "fixtures/demo_repo/.gitignore",
+    "fixtures/demo_repo/inventory.py",
+    "fixtures/demo_repo/solve_task.json",
+    "fixtures/demo_repo/task.json",
+    "fixtures/demo_repo/test_inventory.py",
+    "pyproject.toml",
+    "tests/__init__.py",
+    "tests/test_engine.py",
+    "znak_code/__init__.py",
+    "znak_code/__main__.py",
+    "znak_code/cli.py",
+    "znak_code/contracts.py",
+    "znak_code/engine.py",
+    "znak_code/providers.py",
+    "znak_code/repo.py"
+  ],
+  "tests_executed": [
+    {
+      "command": "python3 -m unittest discover -s tests -v",
+      "scope": "T01-T18 plus state-machine, provider, worktree-race, protected-target, syntax rollback and executor safety checks",
+      "passed": 32,
+      "failed": 0,
+      "exit_code": 0
+    },
+    {
+      "command": "python3 -m znak_code --help",
+      "scope": "CLI entry point",
+      "passed": 1,
+      "failed": 0,
+      "exit_code": 0
+    },
+    {
+      "command": "end-to-end temporary fixture: solve --apply; unittest -v; verify; explain",
+      "scope": "real patch transaction and receipt audit",
+      "passed": 4,
+      "failed": 0,
+      "exit_code": 0,
+      "precondition": "The deliberately buggy fixture first failed both tests as expected."
+    }
+  ],
+  "tests_passed": 37,
+  "tests_failed": 0,
+  "code_review": {
+    "initial_findings": 6,
+    "initial_severity": {
+      "major": 3,
+      "minor": 3
+    },
+    "remediation_review_passes": [
+      {
+        "findings": 1,
+        "major": 1
+      },
+      {
+        "findings": 2,
+        "major": 2
+      },
+      {
+        "findings": 1,
+        "major": 1
+      }
+    ],
+    "final_review_findings": 0,
+    "remediation": "All ten findings across four finding-bearing passes were verified and remediated; the final pass reported zero findings."
+  },
+  "known_limitations": [
+    "Only UTF-8 full-text source replacements are supported.",
+    "New-file parent directories must already exist.",
+    "Historical verify audits artifacts but does not re-execute commands.",
+    "Python 3.9.25 was available for this build; Python 3.12 and Windows were not exercised.",
+    "Dirty-worktree opt-in, HTTP providers and deployment actions are intentionally absent."
+  ],
+  "unknown": [
+    "Behavior on Windows remains unverified in this Linux sandbox."
+  ],
+  "git_state": {
+    "repository_base": "2a759db3f4bde8dfd3a034b5dff3fc9449dd0a52",
+    "delivery_branch": "coderabbit/changes/87c0457e",
+    "scope": "Only files under ZNAK_FORGE_CODE_v0_1 are changed."
+  }
+}

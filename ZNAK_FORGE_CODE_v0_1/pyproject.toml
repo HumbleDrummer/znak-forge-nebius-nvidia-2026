@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "znak-forge-code"
+version = "0.1.0"
+description = "ROBAK CODE CORE: an evidence-gated local coding engine"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+
+[project.scripts]
+znak-code = "znak_code.cli:main"
+
+[tool.setuptools]
+packages = ["znak_code"]
+
