@@ -1,4 +1,4 @@
-# ZNAK FORGE — Nebius x NVIDIA Global AI Hackathon
+# ZNAK FORGE â€” Nebius x NVIDIA Global AI Hackathon
 
 ## Track
 Coding and Agentic Engineering.
@@ -98,6 +98,6 @@ https://github.com/HumbleDrummer/znak-forge-nebius-nvidia-2026
 
 ## Next submission gate
 1. Apply `NEBIUS-DEVPOST-GLOBAL26` manually in the Token Factory billing UI if automation remains blocked.
-2. Run the final secret scan, then publish the repository with the root MIT `LICENSE` visible.
-3. Record the 3-minute demo from the verified dry-run, accepted live run and rollback case.
-4. Upload the final video publicly to YouTube and attach the URL to the submission.
+2. Record the 3-minute demo from the verified dry-run, accepted live run and rollback case.
+3. Upload the final video publicly to YouTube and attach the URL to the submission.
+4. Verify the final Devpost fields against the public repository and video.
