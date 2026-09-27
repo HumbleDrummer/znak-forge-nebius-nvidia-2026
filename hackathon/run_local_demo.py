@@ -11,10 +11,12 @@ from pathlib import Path
 
 
 def sha256(path: Path) -> str:
+    """Return the SHA-256 of the exact file bytes."""
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def run(argv, *, cwd=None, check=True):
+    """Execute a local argv command and capture its output without a shell."""
     return subprocess.run(
         [str(x) for x in argv],
         cwd=str(cwd) if cwd else None,
@@ -25,6 +27,7 @@ def run(argv, *, cwd=None, check=True):
 
 
 def init_demo_repo(source: Path, dest: Path) -> None:
+    """Copy the fixture and commit a clean, isolated Git baseline."""
     shutil.copytree(source, dest)
     run(["git", "-C", dest, "init"])
     run(["git", "-C", dest, "config", "user.name", "ZNAK Demo"])
@@ -66,7 +69,9 @@ def bind_demo_task(template: Path, work: Path, destination: Path) -> None:
 
 
 def demo_succeeded(positive: dict, negative: dict) -> bool:
+    """Require executed positive verification and a genuine negative shadow rollback."""
     def check(meta, kind, code):
+        """Require exactly one verification of this kind with the expected exit and class."""
         values = [v for v in meta.get("verification_results", []) if v.get("kind") == kind]
         return (len(values) == 1 and values[0].get("exit_code") == code
                 and values[0].get("result_class") == ("PASS" if code == 0 else "FAIL"))
@@ -92,6 +97,7 @@ def demo_succeeded(positive: dict, negative: dict) -> bool:
 
 
 def scenario(name: str, task: Path, evidence_root: Path, fixture: Path, core: Path):
+    """Run one isolated scenario and preserve available evidence, including incomplete runs."""
     out = evidence_root / name
     work = out / "demo_repo"
     out.mkdir(parents=True, exist_ok=True)
@@ -131,7 +137,9 @@ def scenario(name: str, task: Path, evidence_root: Path, fixture: Path, core: Pa
     receipt = {}
     if run_dirs:
         shutil.copytree(run_dirs[0], out / "run_artifacts")
-        receipt = json.loads((run_dirs[0] / "final_receipt.json").read_text(encoding="utf-8"))
+        receipt_path = run_dirs[0] / "final_receipt.json"
+        if receipt_path.is_file():
+            receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
         final_status = receipt.get("final_status")
         mutation_status = receipt.get("mutation_status")
 
@@ -166,6 +174,7 @@ def scenario(name: str, task: Path, evidence_root: Path, fixture: Path, core: Pa
 
 
 def main() -> int:
+    """Write both scenario summaries and return zero only for a fully verified demo."""
     root = Path(__file__).resolve().parent.parent
     core = root / "ZNAK_FORGE_CODE_v0_1"
     fixture = core / "fixtures" / "demo_repo"
