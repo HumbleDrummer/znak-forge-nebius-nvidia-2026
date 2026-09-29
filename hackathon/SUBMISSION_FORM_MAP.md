@@ -74,30 +74,26 @@ Options:
 - Personal AI
 - Physical AI
 
-Current state:
-`UNRESOLVED: Coding and agentic engineering vs Best apps and agents`
-
-Reason:
-- FORGE clearly plans, writes, tests, verifies and iterates on a real repository.
-- Official judging announcement describes that behavior as strong Coding/Agentic fit.
-- Current formal track description also mentions Token Factory Sandboxes.
-- Our validated runtime uses Token Factory inference plus local repository execution, not Token Factory Sandboxes.
-
-Decision gate:
-Obtain organizer clarification or add a real Sandbox slice before locking Coding track.
-Do not choose a track merely for prize strategy.
+Current answer:
+`Best apps and agents`
 
 Status:
-UNKNOWN / ACTION_REQUIRED
+READY / RECOMMENDED
+
+Reason:
+The validated build uses Nebius Token Factory inference plus local FORGE repository authority, mutation, verification and rollback. The current Coding and Agentic Engineering wording expects coding agents and developer tools in Token Factory Sandboxes; this build does not claim a Sandbox slice. Best Apps and Agents is therefore the honest fit for the artifact that exists now.
 
 ## Field 28268 — New or existing before Aug 26, 2026
 Required: YES
 
-Current answer:
-`Existing`
+Current state:
+`UNKNOWN — USER CONFIRMATION REQUIRED`
+
+Evidence boundary:
+The public repository snapshot was created during the hackathon period, while the local FORGE core may have existed earlier. The available evidence does not prove whether the project meets the form's Aug 26 cutoff. Do not submit `Existing` or `New` without the submitter's factual confirmation.
 
 Status:
-READY
+USER_CONFIRM
 
 ## Field 28269 — Significant update using Nebius tools
 Required: NO, but relevant because project is existing.
@@ -144,12 +140,13 @@ Still required:
 Required by field: NO
 
 Current:
-`BLOCKER / HIGH_VALUE: PUBLIC_DEMO_URL_MISSING`
+`https://znak-forge-demo.znakhumbledrummer.chatgpt.site`
 
-Candidate:
-- public test build / reproducible CLI demo artifact.
+Scope:
+Public no-key deterministic test build. It demonstrates the accepted canonical repair and the rejected/rolled-back naive repair. It does not make a model call or mutate a repository; the live Nebius path remains in the public CLI repository.
 
-Do not claim hosted app until one exists.
+Status:
+READY / PUBLIC_TEST_BUILD_VERIFIED
 
 ## Field 28272 — Models used and why
 Required: YES
@@ -321,8 +318,19 @@ Public YouTube video:
 - must show project working;
 - audio must explain Nebius Token Factory and NVIDIA model usage.
 
-Prepared:
+Current verified URL:
+`https://youtu.be/BZf4hUlFIYs`
+
+Observed state on 2026-09-29:
+- public YouTube page;
+- duration 2:48;
+- title names Nebius Token Factory and NVIDIA Nemotron.
+
+Prepared script:
 `hackathon/VIDEO_SCRIPT_3MIN.md`
+
+Status:
+READY / PUBLIC_VIDEO_VERIFIED
 
 ## Feedback requirement
 
@@ -342,9 +350,8 @@ Prepared:
 
 ## Final pre-submit blockers
 
-1. TRACK decision.
-2. working demo/test-build URL.
-3. public YouTube URL.
-4. justified numeric feedback ratings.
-5. optional Tavily decision.
-6. final USER_CONFIRM identity/eligibility fields.
+1. Required numeric feedback answers: 28273, 28275, 28277 and 28278 need final honest values; do not infer them silently.
+2. Field 28268 (New/Existing cutoff) needs factual submitter confirmation.
+3. Identity and eligibility fields 28261, 28262, 28265, 28266, 28283 and 28284 need final confirmation.
+4. Sync the current track, public demo URL and verified YouTube URL to Devpost.
+5. Actual Devpost submit still requires explicit user confirmation.
