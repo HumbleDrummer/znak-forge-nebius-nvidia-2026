@@ -1,7 +1,9 @@
 # ZNAK FORGE â€” Nebius x NVIDIA Global AI Hackathon
 
 ## Track
-Coding and Agentic Engineering.
+Best Apps and Agents (recommended for the current validated build).
+
+The present runtime uses Nebius Token Factory for NVIDIA Nemotron inference and local FORGE authority, mutation, verification and rollback. It does not currently claim Token Factory Sandboxes, so the Coding and Agentic Engineering track is not asserted.
 
 ## Project
 ZNAK FORGE / ROBAK CODE CORE is an evidence-gated coding agent runtime.
@@ -89,15 +91,26 @@ hackathon submission period with:
 - Local secret scan: 0 key/private-key hits.
 - Validated runtime remains unchanged.
 
+## Public test build
+
+- URL: https://znak-forge-demo.znakhumbledrummer.chatgpt.site
+- Scope: public, no-key deterministic test of accepted verification and rejected/rolled-back false acceptance.
+- Evidence boundary: the page makes no model call and changes no repository; the real Nebius Token Factory inference path remains `hackathon/run_live_demo.py`.
+
 ## Current blockers
-- Hackathon promotional credit has not yet been applied to the Token Factory account.
-- Public YouTube demo URL does not exist yet.
+
+- The live submission still needs the final required custom-answer ratings and the two eligibility checkboxes confirmed by the submitter.
+- The Devpost project must be synced with the public demo link and the honest track choice before final submission.
+
+## Operational note (not a submission blocker)
+
+- Promotional credit was not applied to the Token Factory account during preparation. The public test build does not require it; additional live calls still require a valid user-owned Token Factory key.
 
 ## Public repository
 https://github.com/HumbleDrummer/znak-forge-nebius-nvidia-2026
 
 ## Next submission gate
-1. Apply `NEBIUS-DEVPOST-GLOBAL26` manually in the Token Factory billing UI if automation remains blocked.
-2. Record the 3-minute demo from the verified dry-run, accepted live run and rollback case.
-3. Upload the final video publicly to YouTube and attach the URL to the submission.
-4. Verify the final Devpost fields against the public repository and video.
+
+1. Sync the public demo URL and Best Apps and Agents track to the Devpost project.
+2. Verify the required custom-answer ratings and identity/eligibility confirmations.
+3. Submit only after the final user confirmation.
