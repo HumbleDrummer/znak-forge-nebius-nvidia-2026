@@ -10,7 +10,9 @@ The model can propose. It cannot declare its own success.
 
 ## Hackathon track
 
-**Coding and Agentic Engineering**
+**Best Apps and Agents (recommended for the current validated build)**
+
+The current submission uses Nebius Token Factory for NVIDIA Nemotron inference and keeps repository authority, mutation, verification and rollback in the local FORGE engine. It does not claim Token Factory Sandboxes in the present build, so the Best Apps and Agents track is the honest fit. A future Sandbox integration would require a fresh track review.
 
 FORGE is designed around a real repository workflow:
 
@@ -150,6 +152,16 @@ python -m unittest discover -s tests -v
 ```
 
 Current verified result: **40/40 PASS**.
+
+## Public test build
+
+A no-key browser test build is available at:
+
+https://znak-forge-demo.znakhumbledrummer.chatgpt.site
+
+It deterministically demonstrates both the accepted canonical repair and the rejected naive repair with independent shadow verification and rollback. The buttons make no model call and change no repository. The real Nebius Token Factory path remains the CLI demo below and requires the user’s own `NEBIUS_API_KEY`.
+
+See [`hackathon/PUBLIC_DEMO.md`](hackathon/PUBLIC_DEMO.md) for the evidence boundary.
 
 ## Live demo
 
