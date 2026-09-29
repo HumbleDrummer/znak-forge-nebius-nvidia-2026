@@ -71,6 +71,13 @@ This is a submission gate, not optional polish.
 - [ ] Keep secrets, billing/account screens, and private credentials out of the recording.
 - [ ] Use `hackathon/VIDEO_SCRIPT_3MIN.md` as the canonical recording script.
 
+## Public test build
+
+- URL: https://znak-forge-demo.znakhumbledrummer.chatgpt.site
+- [x] No-key deterministic accepted/rollback test is publicly reachable.
+- [x] Scope is disclosed: browser test build does not call the model or mutate a repository.
+- [x] Live Nebius Token Factory CLI path is linked from the public build.
+
 ## Public repository
 
 - URL: `https://github.com/HumbleDrummer/znak-forge-nebius-nvidia-2026`
@@ -79,4 +86,5 @@ This is a submission gate, not optional polish.
 
 ## Release blockers
 
-- YouTube demo URL not yet available.
+- Final Devpost custom-answer ratings and user-owned eligibility confirmations remain to be completed before the actual submit.
+- A public YouTube demo is now verified at https://youtu.be/BZf4hUlFIYs (2:48).
